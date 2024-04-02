@@ -1,55 +1,47 @@
-import React from 'react'
-import {useRef,useState} from 'react'
-import '../../src/index.css'
+import React, { useRef, useState } from 'react';
+import '../../src/index.css';
 
 const Progressbar = () => {
-  const [currentProgress,setCurrentProgress]=useState(1)
+  const [currentProgress, setCurrentProgress] = useState(1);
   const progressBar = useRef();
-  const circle= useRef(1)
- const  progressArr=[2,3,4]
+  const circle = useRef();
 
+  const progressArr = [1, 2, 3, 4];
 
-  //dom요소에 직접 접근해야하기때문에 ref사용 
+  const prevSteps = () => {
+    if (currentProgress > 1) {
+      setCurrentProgress(currentProgress - 1);
+    }
+  };
 
-  //전 단계 현재와 전꺼랑 
-  const prevSteps=(e)=>{
-    const progressCount= Number(circle.current.childNodes[currentProgress-2].textContent)
-    setCurrentProgress(currentProgress-1)
-    if (currentProgress === progressCount) { 
-      circle.current.childNodes[progressCount].classList.remove('active');
-  }
+  const nextSteps = () => {
+    if (currentProgress < progressArr.length) {
+      setCurrentProgress(currentProgress + 1);
+    }
+  };
 
-
-  //다음단계 
-  const NextSteps=(e)=>{
-    const progressCount= Number(circle.current.childNodes[currentProgress-1].textContent)
-    setCurrentProgress(currentProgress-1)
-    if (currentProgress === progressCount) { 
-      circle.current.childNodes[progressCount].classList.add('active');
-  }
   return (
-<>
-<div className="steps" ref={circle}>
-    <span class Name= "circle active">1</span>{
-    progressArr.map((i)=>(
-      <span className="circle">{i}</span> 
-      ))
-  }
-  <div className="progress-bar">
-      <span ref={progressBar} className="indicator"></span>
-  </div>
-</div>
-<div className="buttons">
+    <>
+      <div className="steps" ref={circle}>
+        {progressArr.map((step) => (
+          <span key={step} className={`circle ${step === currentProgress ? 'active' : ''}`}>
+            {step}
+          </span>
+        ))}
+        <div className="progress-bar">
+          <span ref={progressBar} className="indicator"></span>
+        </div>
+      </div>
+      <div className="buttons">
+        <button id="prev" disabled={currentProgress === 1} onClick={prevSteps}>
+          이전
+        </button>
+        <button id="next" disabled={currentProgress === progressArr.length} onClick={nextSteps}>
+          다음
+        </button>
+      </div>
+    </>
+  );
+};
 
-  <button id="prev" disabled={currentProgress === 1 ? true : false} onClick={(() => {prevSteps()})}> 이전 </button>
-
-  <button id="next" disabled={currentProgress === 4 ? true : false} onClick={() => {NextSteps()}}>다음 </button>
-</div>
-   
-
-</>
-  )
-}
-  }
-}
 export default Progressbar;
